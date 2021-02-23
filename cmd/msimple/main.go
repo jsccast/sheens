@@ -20,6 +20,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"regexp"
 	"strings"
@@ -39,6 +40,7 @@ func main() {
 		specFilename     = flag.String("s", "", "specs filename (YAML)")
 		startingNode     = flag.String("n", "start", "starting node")
 		startingBindings = flag.String("b", "{}", "starting bindings (in JSON)")
+		seed             = flag.Int64("seed", time.Now().UnixNano(), "pseudo-random number generator seed")
 
 		recycle = flag.Bool("r", true, "ingest emitted messages")
 		diag    = flag.Bool("d", false, "print diagnostics")
@@ -46,6 +48,8 @@ func main() {
 	)
 
 	flag.Parse()
+
+	rand.Seed(*seed)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
